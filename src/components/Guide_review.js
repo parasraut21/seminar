@@ -1,28 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 import Model from './Model';
-import Guide_review1 from './Guide_review1';
+
 import Guide_review2 from './Guide_review2';
 import Guide_review3 from './Guide_review3';
+import Navbar from './Navbar';
+import { useSelector, useDispatch } from 'react-redux';
+
 
 function Guide_review() {
-  const [review1, setReview1] = useState(false);
+  const guideEmail = localStorage.getItem('guideEmail')
   const [review2, setReview2] = useState(false);
   const [review3, setReview3] = useState(false);
   const navigate = useNavigate();
 
+
+  //
+
   const signUp = () => {
     navigate('/prelogin');
-  };
-
-  const openReview1 = () => {
-    setReview1(true);
-  };
-
-  const closeReview1 = () => {
-    setReview1(false);
   };
 
   //open 2
@@ -42,9 +40,10 @@ function Guide_review() {
   const closeReview3 = () => {
     setReview3(false);
   };
-
   return (
     <>
+   <Navbar _email={guideEmail}/>
+
       <Container fluid>
         <div
           className="container-fluid"
@@ -69,23 +68,12 @@ function Guide_review() {
             }}
           >
             <h1>MIT-WPU (Guide)</h1>
+            <hr />
             <Row className="justify-content-center mt-5">
               <Col md={4}>
-                <Card className="login-card">
+                <Card className="login-card "style={{ backgroundColor: '#194d33', color: 'white' }} >
                   <Card.Body>
-                    <Card.Title onClick={openReview1}>See Review 1</Card.Title>
-                    {review1 ? (
-                      <Model onClose={closeReview1}>
-                        <Guide_review1 />
-                      </Model>
-                    ) : null}
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col md={4}>
-                <Card className="login-card">
-                  <Card.Body>
-                    <Card.Title  onClick={openReview2}>See Review 2</Card.Title>
+                    <Card.Title  onClick={openReview2} style={{ fontSize: '1rem', marginBottom: '1rem', cursor: 'pointer' }}>See Review 2</Card.Title>
                     {review2 ? (
                       <Model onClose={closeReview2}>
                         <Guide_review2 />
@@ -95,9 +83,9 @@ function Guide_review() {
                 </Card>
               </Col>
               <Col md={4}>
-                <Card className="login-card">
+                <Card className="login-card"style={{ backgroundColor: '#194d33', color: 'white' }}>
                   <Card.Body>
-                    <Card.Title onClick={openReview3}>See Review 3</Card.Title>
+                    <Card.Title onClick={openReview3} style={{ fontSize: '1rem', marginBottom: '1rem', cursor: 'pointer' }}>See Review 3</Card.Title>
                     {review3 ? (
                       <Model onClose={closeReview3}>
                         <Guide_review3 />
@@ -107,6 +95,7 @@ function Guide_review() {
                 </Card>
               </Col>
             </Row>
+            <hr />
             <button
               onClick={signUp}
               type="submit"
@@ -135,6 +124,7 @@ function Guide_review() {
             justify-content: space-between;
             background-color: #194d33;
             color: white;
+            
           }
 
           .card-title {

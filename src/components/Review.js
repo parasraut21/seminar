@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,10 @@ import Review2 from './Review2';
 import Review2_results from './Review2_results';
 import Review3_results from './Review3_results';
 import Review3 from './Review3';
+import Navbar from './Navbar';
+import { useSelector, useDispatch } from 'react-redux';
+
+
 
 function Review() {
   const [review1, setReview1] = useState(false);
@@ -19,6 +23,10 @@ function Review() {
   const [review2_results, setReview2_results] = useState(false);
   const [review3_results, setReview3_results] = useState(false);
   const navigate = useNavigate();
+
+  //  
+ 
+  const userEmail = localStorage.getItem('userEmail')
 
   const signUp = () => {
     navigate('/prelogin');
@@ -78,6 +86,7 @@ function Review() {
   };
   return (
     <>
+   <Navbar _email={userEmail}/>
       <Container fluid>
         <div
           className="container-fluid"
@@ -102,6 +111,7 @@ function Review() {
             }}
           >
             <h1>MIT-WPU</h1>
+            <hr />
             <Row className="justify-content-center mt-5">
               <Col md={4}>
                 <Card className="login-card">
@@ -158,6 +168,7 @@ function Review() {
                 </Card>
               </Col>
             </Row>
+            <hr />
             <button
               onClick={signUp}
               type="submit"

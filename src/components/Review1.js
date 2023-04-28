@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import './Review1.css'; // Import CSS file
+import { useSelector, useDispatch } from 'react-redux';
 
 const Review1 = () => {
   const [input1, setInput1] = useState('');
@@ -7,8 +8,24 @@ const Review1 = () => {
   const [input3, setInput3] = useState('');
   const [email, setEmail] = useState('');
 
+  const [pairs, setPairs] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/get-pair')
+      .then(response => response.json())
+      .then(data => setPairs(data))
+      .catch(error => console.error(error));
+      
+  }, []);
+  const userEmails = pairs.map(pair => pair.student_email);
+  const [userEmail] = userEmails
+  
+
   const handleSubmit = async (event) => {
-   const userEmail = localStorage.getItem('userEmail');
+    //
+   
+
+  
     event.preventDefault();
     const response = await fetch('http://localhost:5000/topicpost', {
         method: 'POST',

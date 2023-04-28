@@ -1,15 +1,15 @@
-//const BASE_URL = "http://localhost:5000";
 
 const jwt = require('jsonwebtoken');
 // const bcrypt = require('bcryptjs');
-const JWT_SECRET = "Parasisgoodb$oi"
+const JWT_SECRET = "mit132334#@$$$";
+
 const {students, guides, coordinators,Ppt3} = require('./models/User');
 // const Sequelize = require('sequelize');
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const { body, validationResult } = require('express-validator');
-const mysql = require('mysql');
+//const mysql = require('mysql');
 
 const cors = require('cors');
 
@@ -60,7 +60,7 @@ app.post('/studentpost', [
             res.status(201).json({success,students,token});
           })
           .catch((error) => {
-           console.log("Error hai :",error);
+           console.log("Error :",error);
               });
  
 });
@@ -107,7 +107,7 @@ app.post('/guidepost', [
               res.status(201).json({success,guides,token});
             })
             .catch((error) => {
-             console.log("Error hai :",error);
+             console.log("Error :",error);
                 });
    
   });
@@ -154,7 +154,7 @@ app.post('/coordinatorpost', [
               res.status(201).json({success,coordinators,token});
             })
             .catch((error) => {
-             console.log("Error hai :",error);
+             console.log("Error :",error);
                 });
    
   });
@@ -264,33 +264,32 @@ app.post('/topicpost', async  (req, res) => {
  
 });
 
-// get topics by particular student
-const con = mysql.createConnection({
-  host:'localhost',
-  user:'root',
-  password:'root123',
-  database:'seminar'
-})
 
-con.connect((err)=>{
-  if(err){
-      console.log(err);
-  }else{
-      console.log("*****************Database Connected seminar successfully********** !!")
-  }
-})
-app.get('/gettopics', async (req,res)=>{
+
+//chatgpt
+const mysql = require('mysql2/promise');
+
+const pool = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: 'root123',
+  database: 'seminar',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
+
+app.get('/gettopics', async (req, res) => {
+  try {
+    const [rows, fields] = await pool.execute('SELECT * FROM review1s');
+    const result = JSON.parse(JSON.stringify(rows));
   
-await  con.query('select * from review1s',function(err,result,fields){
-      if(err){
-          console.log(err);
-      }else{
-       //res.send(result);
-       var r = JSON.parse(JSON.stringify(result)) // JSON must be capital
-      }
-      res.send(r);
-  })
-})
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Error retrieving data from database');
+  }
+});
 
   // post result 1
   app.post('/result_1', async  (req, res) => {
@@ -311,19 +310,17 @@ await  con.query('select * from review1s',function(err,result,fields){
   });
 
   // get result 1
-  app.post('/getresult1', async (req,res)=>{
-    const email = req.body.email;
-  await  con.query(`select * from review1_results where email='${email}'`,function(err,result,fields){
-        if(err){
-            console.log(err);
-        }else{
-         //res.send(result);
-         var t = JSON.parse(JSON.stringify(result)) // JSON must be capital
-        }
-        res.send(t);
-    })
-  
-  })
+  app.post('/getresult1', async (req, res) => {
+    try {
+      const email = req.body.email;
+      const [rows, fields] = await pool.execute(`SELECT * FROM review1_results WHERE email='${email}'`);
+      const result = JSON.parse(JSON.stringify(rows));
+      res.send(result);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Error retrieving data from database');
+    }
+  });
 
   //sendppt review 2
 // configure multerconst storage = multer.diskStorage({
@@ -332,7 +329,7 @@ const fs = require('fs');
 const path = require('path');
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, 'P:\\Seminar\\seminar\\backend\\uploads\\');
+      cb(null, 'P:\\Seminar\\seminar\\backend\\uploads');
     },
     filename: (req, file, cb) => {
       const fileName = `${Date.now()}-${file.originalname}`;
@@ -381,35 +378,46 @@ app.post('/sendppt', (req, res) => {
   });
 });
 
+//chatgpt get ppt
 
+// app.post('/getppt', async (req, res) => {
+//   const email = req.body.email;
+//   const filename = req.body.filename;
+
+//   // Validate the email and filename here...
+
+//   try {
+//     const [result] = await pool.execute(`SELECT * FROM ppts WHERE email=? AND filename=?`, [email, filename]);
+//     if (result && result.length > 0) {
+//       const pptData = result[0].pptData;
+//       const pptBuffer = Buffer.from(pptData, 'binary');
+
+//       const responseData = {
+//         email: email,
+//         filename: filename,
+//         pptBuffer: pptBuffer
+//       };
+
+//       res.status(200).json(responseData);
+//       console.log(`File ${filename} sent successfully`);
+//     } else {
+//       res.status(404).json({ message: 'File not found' });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
 app.post('/getppt', async (req, res) => {
-  const email = req.body.email;
-  const filename = req.body.filename;
-
-  // Validate the email and filename here...
-
-  await con.query(`SELECT * FROM ppts WHERE email='${email}' AND filename='${filename}'`, function (err, result, fields) {
-    if (err) {
-      console.log(err);
-      res.status(500).json({ message: 'Server error' });
-    } else {
-      if (result && result.length > 0) {
-        const pptData = result[0].pptData;
-        const pptBuffer = Buffer.from(pptData, 'binary');
-
-        const responseData = {
-          email: email,
-          filename: filename,
-          pptBuffer: pptBuffer
-        };
-
-        res.status(200).json(responseData);
-        console.log(`File ${filename} sent successfully`);
-      } else {
-        res.status(404).json({ message: 'File not found' });
-      }
-    }
-  });
+  try {
+    const email = req.body.email;
+    const [rows, fields] = await pool.execute(`SELECT * FROM ppts `);
+    const result = JSON.parse(JSON.stringify(rows));
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Error retrieving data from database');
+  }
 });
 
 //send ppt reviwe3 
@@ -441,35 +449,16 @@ app.post('/sendppt3', (req, res) => {
 
 
 app.post('/getppt3', async (req, res) => {
-  const email = req.body.email;
-  const filename = req.body.filename;
-
-  // Validate the email and filename here...
-
-  await con.query(`SELECT * FROM ppt3s WHERE email='${email}' AND filename='${filename}'`, function (err, result, fields) {
-    if (err) {
-      console.log(err);
-      res.status(500).json({ message: 'Server error' });
-    } else {
-      if (result && result.length > 0) {
-        const pptData = result[0].pptData;
-        const pptBuffer = Buffer.from(pptData, 'binary');
-
-        const responseData = {
-          email: email,
-          filename: filename,
-          pptBuffer: pptBuffer
-        };
-
-        res.status(200).json(responseData);
-        console.log(`File ${filename} sent successfully`);
-      } else {
-        res.status(404).json({ message: 'File not found' });
-      }
-    }
-  });
+  try {
+    const email = req.body.email;
+    const [rows, fields] = await pool.execute(`SELECT * FROM ppt3s `);
+    const result = JSON.parse(JSON.stringify(rows));
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Error retrieving data from database');
+  }
 });
-
 //post result 2
 app.post('/entermarks', async  (req, res) => {
   var success=false;
@@ -489,19 +478,17 @@ app.post('/entermarks', async  (req, res) => {
 });
 
  // get result 2
- app.post('/getresult2', async (req,res)=>{
+ app.post('/getresult2', async (req, res) => {
   const email = req.body.email;
-await  con.query(`select * from review2_results where email='${email}'`,function(err,result,fields){
-      if(err){
-          console.log(err);
-      }else{
-       //res.send(result);
-       var t = JSON.parse(JSON.stringify(result)) // JSON must be capital
-      }
-      res.send(t);
-  })
-
-})
+  try {
+    const [result] = await pool.execute(`SELECT * FROM review2_results WHERE email='${email}'`);
+    const t = JSON.parse(JSON.stringify(result)); // JSON must be capital
+    res.send(t);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 
 //post result 3
@@ -512,9 +499,9 @@ app.post('/entermarks3', async  (req, res) => {
   const { email ,marks } = req.body;
  
   review3_results.create({ email,marks})
-  .then((result_3) => {
+  .then((result_2) => {
     success=true;
-            res.status(201).json({success,result_3});
+            res.status(201).json({success,result_2});
           })
           .catch((error) => {
            console.log("error hai : ",error)
@@ -522,102 +509,78 @@ app.post('/entermarks3', async  (req, res) => {
  
 });
 
+
  // get result 3
- app.post('/getresult3', async (req,res)=>{
+ app.post('/getresult3', async (req, res) => {
   const email = req.body.email;
-await  con.query(`select * from review3_results where email='${email}'`,function(err,result,fields){
-      if(err){
-          console.log(err);
-      }else{
-       //res.send(result);
-       var t = JSON.parse(JSON.stringify(result)) // JSON must be capital
-      }
-      res.send(t);
-  })
-})
+  try {
+    const [result] = await pool.execute(`SELECT * FROM review3_results WHERE email='${email}'`);
+    const t = JSON.parse(JSON.stringify(result)); // JSON must be capital
+    res.send(t);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
+// //
+app.post('/store-selected-pair', async (req, res) => {
+  const { studentId, student_name,student_email, guideId, guide_name,guide_email } = req.body;
 
- // co ordinator
-//  app.get('/retrieve-email-and-name', (req, res) => {
-//   // execute the query to retrieve email and name from the two tables
-//   con.query('SELECT students.email, guides.name FROM students JOIN guides ON students.id = guides.id', (error, results) => {
-//     if (error) {
-//       console.error(error);
-//       return res.status(500).json({ message: 'Internal server error' });
-//     }
-
-//     // create a new table to store the email and name
-//     con.query('CREATE TABLE IF NOT EXISTS assigned (email VARCHAR(255), name VARCHAR(255))', (error) => {
-//       if (error) {
-//         console.error(error);
-//         return res.status(500).json({ message: 'Internal server error' });
-//       }
-
-//       // loop through the results and insert each row into the new table
-//       for (let i = 0; i < results.length; i++) {
-//         const row = results[i];
-//         con.query('INSERT INTO assigned (email, name) VALUES (?, ?)', [row.email, row.name], (error) => {
-//           if (error) {
-//             console.error(error);
-//             return res.status(500).json({ message: 'Internal server error' });
-//           }
-//         });
-//       }
-//       // return a success response
-//       return res.status(200).json({ message: 'Email and name retrieved and stored successfully' });
-//     });
-//   });
-// });
-
-
-// define an endpoint that stores the selected pair of student and guide in the new table
-app.post('/store-selected-pair', (req, res) => {
-  const { studentId, student_name, guideId, guide_name } = req.body;
-
-  con.query('CREATE TABLE IF NOT EXISTS selected_pairs (student_id INT, student_name VARCHAR(30), guide_id INT, guide_name VARCHAR(30))', (error) => {
-    if (error) {
-      console.error(error);
-    }
-  });
-  // insert the selected pair into the new table
-  con.query('INSERT INTO selected_pairs (student_id,student_name, guide_id,guide_name) VALUES (?,?,?,?)', [studentId, student_name, guideId, guide_name], (error) => {
-    if (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-
-    // return a success response
+  try {
+    const conn = await pool.getConnection();
+    await conn.query('CREATE TABLE IF NOT EXISTS selected_pairs (student_id INT, student_name VARCHAR(30),student_email VARCHAR(30), guide_id INT, guide_name VARCHAR(30),guide_email VARCHAR(30))');
+    await conn.query('INSERT INTO selected_pairs (student_id,student_name, student_email,guide_id,guide_name,guide_email) VALUES (?,?,?,?,?,?)', [studentId, student_name,student_email, guideId, guide_name,guide_email]);
+    conn.release();
     return res.status(200).json({ message: 'Selected pair stored successfully' });
-  });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
 });
 
 
-app.get('/get-students', (req, res) => {
-  // retrieve the list of students from the students table in the database
-  con.query('SELECT * FROM students', (error, results, fields) => {
-    if (error) {
-      console.error(error);
-      res.status(500).send('Error retrieving students');
-    } else {
-      res.send(results);
-    }
-  });
+app.get('/get-students', async (req, res) => {
+  try {
+    const connection = await pool.getConnection();
+    const [results, fields] = await connection.execute('SELECT * FROM students');
+    connection.release();
+
+    res.send(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error retrieving students');
+  }
 });
 
 // API endpoint to get the list of guides
-app.get('/get-guides', (req, res) => {
-  // retrieve the list of guides from the guides table in the database
-  con.query('SELECT * FROM guides', (error, results, fields) => {
-    if (error) {
-      console.error(error);
-      res.status(500).send('Error retrieving guides');
-    } else {
-      res.send(results);
-    }
-  });
+app.get('/get-guides', async (req, res) => {
+  try {
+    const connection = await pool.getConnection();
+    const [results, fields] = await connection.execute('SELECT * FROM guides');
+    connection.release();
+
+    res.send(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error retrieving guides');
+  }
 });
 
 
+app.get('/get-pair', async (req, res) => {
+  try {
+    const connection = await pool.getConnection();
+    const [results, fields] = await connection.execute('SELECT * FROM selected_pairs');
+    connection.release();
+
+    res.send(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error retrieving students');
+  }
+});
+
 app.listen(5000, () => {
-    console.log(`Server started on port 3000`);
+    console.log(`Server started on port 5000`);
   });

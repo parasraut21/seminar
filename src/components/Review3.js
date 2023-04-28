@@ -1,7 +1,19 @@
-import React, { useState } from 'react';
+
+import React, { useState,useEffect } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
+import { useSelector, useDispatch } from 'react-redux';
 
 function Review3() {
+  const [pairs, setPairs] = useState([]);
+  useEffect(() => {
+    fetch('http://localhost:5000/get-pair')
+      .then(response => response.json())
+      .then(data => setPairs(data))
+      .catch(error => console.error(error));
+      
+  }, []);
+  const userEmail = pairs.map(pair => pair.student_email);
+
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState(null);
 
@@ -16,12 +28,13 @@ function Review3() {
       setMessage('Please select a file.');
       return;
     }
-  
+   
     const formData = new FormData();
     formData.append('ppt', file);
     formData.append('filename', file.name);
-    formData.append('email', 'example@example.com');
-    const email = 'example@example.com'
+    formData.append('email', userEmail );
+    // const email = 'example@example.com'
+  
   console.log(file.name);
     try {
       const response = await fetch('http://localhost:5000/sendppt3', {
@@ -43,8 +56,8 @@ function Review3() {
   };
   return (
     <Container>
-      <h1>Review 3 (Student)</h1>
-      <h3>Upload Presentation (Reseacrh Paper)</h3>
+      <h1>Review 3</h1>
+      <h3>Upload Research Paper</h3>
       <Form onSubmit={handleSubmit} enctype="multipart/form-data">
         <Form.Group controlId="formFile">
           <Form.Label>Select a PowerPoint file</Form.Label>
