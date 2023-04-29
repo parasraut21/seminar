@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 
 function Guide_review() {
-  const guideEmail = localStorage.getItem('guideEmail')
+ 
   const [review2, setReview2] = useState(false);
   const [review3, setReview3] = useState(false);
   const navigate = useNavigate();
@@ -40,6 +40,58 @@ function Guide_review() {
   const closeReview3 = () => {
     setReview3(false);
   };
+
+  //
+  const [pairs, setPairs] = useState([]);
+  // const [guideEmail, setGuideEmail] = useState(null);
+
+
+  useEffect(() => {
+    fetch('http://localhost:5000/get-pair')
+      .then(response => response.json())
+      .then(data => setPairs(data))
+  }, []);
+
+  useEffect(() => {
+    const guideEmails = pairs.map(pair => pair.guide_email);
+    // const [guideEmail] = guideEmails;
+    // setGuideEmail(guideEmail);
+
+    const studentEmails = pairs.map(pair => pair.student_email);
+    // const [studentEmail] = studentEmails;
+    // setStudentEmail(studentEmail);
+  }, [pairs]);
+
+
+  const guideEmail = localStorage.getItem('guideEmail')
+
+
+  //
+  const [studentEmail, setStudentEmail] = useState('');
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+     
+        const response = await fetch('http://localhost:5000/getpair', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ guideEmail:guideEmail}),
+        });
+        const data = await response.json();
+        setStudentEmail(data[0].student_email);
+        // console.log(data[0].student_email)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchData();
+  }, []);
+  console.log(studentEmail)
+  
   return (
     <>
    <Navbar _email={guideEmail}/>
@@ -67,8 +119,29 @@ function Guide_review() {
               textAlign: 'center',
             }}
           >
-            <h1>MIT-WPU (Guide)</h1>
+            <h3>MIT-WPU (Guide)</h3>
+           
+            <div className="container my-5">
+      <div className="row justify-content-center">
+        <div className="col-md-8">
+          <div className="card">
+            <div className="card-header">
+              Student Email
+            </div>
+            <div className="card-body">
+              {studentEmail ? (
+                <p className="lead">Your student email is <strong>{studentEmail}</strong>.</p>
+              ) : (
+                <p className="lead">You have not been assigned a student yet.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
             <hr />
+            <p>The coordinator will conduct the ( Review 1)</p>
+           <hr />
             <Row className="justify-content-center mt-5">
               <Col md={4}>
                 <Card className="login-card "style={{ backgroundColor: '#194d33', color: 'white' }} >

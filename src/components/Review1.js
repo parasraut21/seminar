@@ -8,31 +8,41 @@ const Review1 = () => {
   const [input3, setInput3] = useState('');
   const [email, setEmail] = useState('');
 
+
+  //guide
   const [pairs, setPairs] = useState([]);
+  // const [guideEmail, setGuideEmail] = useState(null);
+  const [studentEmail, setStudentEmail] = useState(null);
 
   useEffect(() => {
     fetch('http://localhost:5000/get-pair')
       .then(response => response.json())
       .then(data => setPairs(data))
       .catch(error => console.error(error));
-      
   }, []);
-  const userEmails = pairs.map(pair => pair.student_email);
-  const [userEmail] = userEmails
-  
+
+  useEffect(() => {
+    const guideEmails = pairs.map(pair => pair.guide_email);
+    // const [guideEmail] = guideEmails;
+    // setGuideEmail(guideEmail);
+
+    const studentEmails = pairs.map(pair => pair.student_email);
+    const [studentEmail] = studentEmails;
+    setStudentEmail(studentEmail);
+  }, [pairs]);
+
+
+ const  guideEmail = localStorage.getItem('guideEmail')
 
   const handleSubmit = async (event) => {
     //
-   
-
-  
     event.preventDefault();
     const response = await fetch('http://localhost:5000/topicpost', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: email, topic1: input1 , topic2: input2, topic3: input3 }),
+        body: JSON.stringify({ guideEmail:guideEmail,studentEmail:studentEmail , topic1: input1 , topic2: input2, topic3: input3 }),
       });
       const json = await response.json();
       console.log(json);
@@ -45,20 +55,11 @@ const Review1 = () => {
       }
   };
 
+  
 
   return (
       <div className="container">
     <form onSubmit={handleSubmit}>
-    <div className="mb-3">
-        <label htmlFor="email" className="form-label">Email</label>
-        <input
-          type="email"
-          className="form-control"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
       <div className="mb-3">
         <label htmlFor="input1" className="form-label">Topic 1</label>
         <input

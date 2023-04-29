@@ -14,12 +14,12 @@ select * from selected_pairs;
 truncate table  selected_pairs;
 drop table selected_pairs;
 
-
-
 select * from review1s;
+drop table review1s;
 truncate table review1s;
 
 select * from ppts;
+drop table ppts;
 truncate table ppts;
 
 select * from ppt3s;
@@ -29,6 +29,7 @@ select * from review1_results;
 truncate table review1_results;
 
 select * from review2_results;
+drop table review2_results;
 truncate table review2_results;
 
 select * from review3_results;
@@ -52,11 +53,9 @@ BEGIN
 END//
 
 DELIMITER ;
-In this script, the first delimiter is set to "//" to allow the use of semi-colons inside the trigger and procedure code. The "update_selected_pairs" trigger updates the "is_selected" field in the "selected_pairs" table to 1 whenever a new pair is selected.
 
-The "calculate_average_review_score" procedure takes a student ID as input and returns the average score of that student's reviews using the AVG function.
 
-After the trigger and procedure are created, you can use them in your SQL statements as needed.
+
 
 
 

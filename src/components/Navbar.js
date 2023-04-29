@@ -79,15 +79,6 @@ export default function Navbar(props) {
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/">MIT-WPU</a>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/review">Review</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/guidereview">Guide Review</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/coreview">Co Review</Link>
-              </li>
             </ul>
             <div className="d-flex align-items-center">
               {props._email  && <span className="mx-3">{props._email}</span>}

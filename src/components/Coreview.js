@@ -116,6 +116,7 @@ function App() {
       <Row>
         <Col>
           <h3>Students</h3>
+          <hr />
           <ListGroup style={{ backgroundColor: '#F0F0F0', padding: '10px' }}>
             {students.map(student => (
               <ListGroup.Item
@@ -131,6 +132,7 @@ function App() {
         </Col>
         <Col>
           <h3>Guides</h3>
+          <hr />
           <ListGroup style={{ backgroundColor: '#F0F0F0', padding: '10px' }}>
             {guides.map(guide => (
               <ListGroup.Item
@@ -145,6 +147,7 @@ function App() {
           </ListGroup>
         </Col>
       </Row>
+      <hr />
       <Form onSubmit={handleSubmit}>
         <Button type="submit"  style={{ marginTop: '10px', backgroundColor: '#4CAF50', color: 'white', border: 'none' }}>Submit</Button>
       </Form>
@@ -153,6 +156,7 @@ function App() {
                         <Guide_review1 />
                       </Model>
                     ) : null}
+                    <hr />
       <Button type="submit" onClick={openReview1} style={{ marginTop: '10px', backgroundColor: '#4CAF50', color: 'white', border: 'none' }}>Review 1</Button>
     </Container>
     
@@ -160,9 +164,11 @@ function App() {
     </div>
     <div className='container'>
     <h3>Previous Selected Pair</h3>
+    <hr />
       <Row>
         <Col>
           <h3>Students</h3>
+          <hr />
           <ListGroup style={{ backgroundColor: '#F0F0F0', padding: '10px' }}>
             {pairs.map(pair => (
               <ListGroup.Item
@@ -177,6 +183,7 @@ function App() {
         -
         <Col>
           <h3>Guides</h3>
+          <hr />
           <ListGroup style={{ backgroundColor: '#F0F0F0', padding: '10px' }}>
             {pairs.map(pair => (
               <ListGroup.Item
