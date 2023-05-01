@@ -27,7 +27,7 @@ function StuSignup(props) {
       }
       else{
          alert("User With This email Already exits")
-         navigate('/stulogin');
+         
       }
       
   }

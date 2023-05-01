@@ -61,8 +61,8 @@ const Review1 = () => {
       <div className="container">
     <form onSubmit={handleSubmit}>
       <div className="mb-3">
-        <label htmlFor="input1" className="form-label">Topic 1</label>
-        <input
+        <label htmlFor="input1" className="form-label">Topic 1 *</label>
+        <input required
           type="text"
           className="form-control"
           id="input1"
@@ -71,8 +71,8 @@ const Review1 = () => {
         />
       </div>
       <div className="mb-3">
-        <label htmlFor="input2" className="form-label">Topic 2</label>
-        <input
+        <label htmlFor="input2" className="form-label">Topic 2 *</label>
+        <input required
           type="text"
           className="form-control"
           id="input2"
@@ -81,13 +81,14 @@ const Review1 = () => {
         />
       </div>
       <div className="mb-3">
-        <label htmlFor="input3" className="form-label">Topic 3</label>
+        <label htmlFor="input3" className="form-label">Topic 3 *</label>
         <input
           type="text"
           className="form-control"
           id="input3"
           value={input3}
           onChange={(e) => setInput3(e.target.value)}
+          required
         />
       </div>
       <button type="submit" className="btn btn-primary">Submit</button>

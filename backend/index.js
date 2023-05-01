@@ -53,15 +53,16 @@ app.post('/studentpost', [
   const { name, email, cpassword  ,confirmPassword } = req.body;
  
   students.create({ name, email, cpassword : hashedPassword ,confirmPassword })
-  .then((students) => {
-    const token = jwt.sign(students.id, JWT_SECRET);
+  .then((student) => {
+    const payload = { id: student.id };
+    const token = jwt.sign(payload, JWT_SECRET);
     console.log(token);
     success=true;
-            res.status(201).json({success,students,token});
-          })
-          .catch((error) => {
-           console.log("Error :",error);
-              });
+    res.status(201).json({success,student,token});
+  })
+  .catch((error) => {
+    console.log("Error :",error);
+  });
  
 });
 
@@ -101,7 +102,8 @@ app.post('/guidepost', [
    
     guides.create({ name, email, cpassword : hashedPassword ,confirmPassword })
     .then((guides) => {
-      const token = jwt.sign(guides.id, JWT_SECRET);
+      const payload = { id: guides.id };
+      const token = jwt.sign(payload, JWT_SECRET);
       console.log(token);
       success=true;
               res.status(201).json({success,guides,token});
@@ -148,7 +150,8 @@ app.post('/coordinatorpost', [
    
     coordinators.create({ name, email, cpassword : hashedPassword ,confirmPassword })
     .then((coordinators) => {
-      const token = jwt.sign(coordinators.id, JWT_SECRET);
+      const payload = { id: coordinators.id };
+      const token = jwt.sign(payload, JWT_SECRET);
       console.log(token);
       success=true;
               res.status(201).json({success,coordinators,token});
@@ -186,7 +189,8 @@ app.post('/login', async (req, res) => {
 
   // Create and send a JWT token as a response
   success=true;
-  const token = jwt.sign({ id: user.id }, JWT_SECRET);
+  const payload = { id: user.id};
+  const token = jwt.sign(payload , JWT_SECRET);
   res.json({success, token });
 });
 
@@ -209,7 +213,8 @@ app.post('/guidelogin', async (req, res) => {
   
     // Create and send a JWT token as a response
     success=true;
-    const token = jwt.sign({ id: user.id }, JWT_SECRET);
+    const payload = { id: user.id};
+    const token = jwt.sign(payload , JWT_SECRET);
     res.json({success, token });
   });
 
@@ -233,7 +238,8 @@ app.post('/cologin', async (req, res) => {
   
     // Create and send a JWT token as a response
     success=true;
-    const token = jwt.sign({ id: user.id }, JWT_SECRET);
+    const payload = { id: user.id};
+    const token = jwt.sign(payload, JWT_SECRET);
     res.json({success, token });
   });
 
