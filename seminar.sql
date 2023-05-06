@@ -2,9 +2,11 @@ create database seminar;
 use seminar;
 
 select * from students;
+drop table students;
 truncate table students;
 
 select * from guides;
+drop table guides;
 truncate table guides;
 
 select * from coordinators;
@@ -23,6 +25,7 @@ drop table ppts;
 truncate table ppts;
 
 select * from ppt3s;
+drop table ppt3s;
 truncate table ppt3s;
 
 select * from review1_results;
